@@ -9,12 +9,10 @@
 {% block content %}
 
 <h1>TJR Tasks</h1>
+
 <form method="post">
     {% csrf_token %}
-    <div class="form-group">
-        <label for="id_task">Task</label>
-        <textarea class="form-control" id="id_task" name="new_task" rows="3"></textarea>
-    </div>
+    {{ form.as_p }}
     <button type="submit" class="btn btn-outline-primary">Add</button>
 </form>
 
@@ -25,7 +23,6 @@
         <tr>
             <th>Task</th>
             <th>Next review date</th>
-            <!-- <th>Completed?</th> -->
             <th>How many days to ignore?</th>
             <th>Push it</th>
             <th>Mark as completed</th>
