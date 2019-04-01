@@ -13,7 +13,7 @@
     {% csrf_token %}
     <div class="form-group">
         <label for="id_task">Task</label>
-        <textarea class="form-control" id="id_task" name="task" rows="3"></textarea>
+        <textarea class="form-control" id="id_task" name="new_task" rows="3"></textarea>
     </div>
     <button type="submit" class="btn btn-outline-primary">Add</button>
 </form>
@@ -25,7 +25,9 @@
         <tr>
             <th>Task</th>
             <th>Next review date</th>
-            <th>Completed?</th>
+            <!-- <th>Completed?</th> -->
+            <th>How many days to ignore?</th>
+            <th>Push it</th>
             <th>Mark as completed</th>
         </tr>
     </thead>
@@ -38,15 +40,26 @@
             <td class="align-middle">
                 {{ item.next_update_date }}
             </td>
-            <td class="align-middle">
-                {{ item.completed_boolean }}
-            </td>
+            <!-- form for day delta entry and button -->
+            <form method="post">
+                    {% csrf_token %}
+                <td class="align-middle">
+
+                    <input type="text">
+                </td>
+                <td>
+                    <button type="submit" name="push" class="btn btn-outline-secondary">Push</button>
+                </td>
+            </form>
+
+
             <td class="align-middle">
 
-                <!-- <form method="post"> -->
-                    <!-- {% csrf_token %} -->
-                        <button type="complete_task_button" name="test" class="btn btn-outline-secondary">Completed</button>
-                <!-- </form> -->
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="complete_task_button" name="completed_task"
+                        class="btn btn-outline-secondary">Completed</button>
+                </form>
 
 
             </td>

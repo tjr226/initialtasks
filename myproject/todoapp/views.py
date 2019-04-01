@@ -9,18 +9,19 @@ from .models import TicklerItem
 
 def home(request):
 
-    # code to create a new task
+    # code to process form entries
     if request.method == 'POST':
-        incoming_task_text = request.POST['task']
-
-        # add user stuff later
-        # user = User.objects.first()
-
-        new_tickler_task = TicklerItem.objects.create(
-            tickler_text = incoming_task_text
-        )
-
-        return redirect('home')
+        # code to absorb top form that creates new tasks
+        if 'new_task' in request.POST:
+            incoming_task_text = request.POST['new_task']
+            new_tickler_task = TicklerItem.objects.create(tickler_text = incoming_task_text)
+            return redirect('home')
+        if 'completed_task' in request.POST:
+            print("completed task button press")
+            # to do
+        if 'push' in request.POST:
+            print("push task button press")
+            #
 
     items = TicklerItem.objects.exclude(completed_boolean=True)
 
