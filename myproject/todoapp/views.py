@@ -7,6 +7,10 @@ from .models import TicklerItem
 
 def home(request):
 
+    # code to implement COMPLETED button
+    # if request.method == 'PUT':
+
+
     # code to create a new task
     if request.method == 'POST':
         incoming_task_text = request.POST['task']
