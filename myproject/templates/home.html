@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+<!-- 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'home' %}">Django Boards</a>
+    </div>
+  </nav>
+   -->
+{% block content %}
+
+<h1>TJR Tasks</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_task">Task</label>
+        <textarea class="form-control" id="id_task" name="task" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Add</button>
+</form>
+
+
+<table class="table">
+
+    <thead class="thead-dark">
+        <tr>
+            <th>Task</th>
+            <th>Next review date</th>
+            <th>Completed?</th>
+            <th>Mark as completed</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td class="align-middle">
+                {{ item.tickler_text }}
+            </td>
+            <td class="align-middle">
+                {{ item.next_update_date }}
+            </td>
+            <td class="align-middle">
+                {{ item.completed_boolean }}
+            </td>
+            <td class="align-middle">
+
+                <form method="put">
+                    {% csrf_token %}
+                    <!-- <div class="form-group"> -->
+                    <!-- <label for="id_task">Task</label> -->
+                    <!-- <textarea class="form-control" id="id_task" name="task" rows="3"></textarea> -->
+                    <!-- </div> -->
+                    <button type="complete_task_button" class="btn btn-outline-secondary">Completed</button>
+                </form>
+
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+<!-- endblock content -->
+{% endblock %}
