@@ -4,12 +4,10 @@ from django.shortcuts import render, redirect
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TicklerItem
+# from .forms import NewTicklerItemForm
+
 
 def home(request):
-
-    # code to implement COMPLETED button
-    # if request.method == 'PUT':
-
 
     # code to create a new task
     if request.method == 'POST':
@@ -23,7 +21,7 @@ def home(request):
         )
 
         return redirect('home')
-    
-    items = TicklerItem.objects.exclude(completed_boolean=True) 
+
+    items = TicklerItem.objects.exclude(completed_boolean=True)
 
     return render(request, 'home.html', {'items': items})
