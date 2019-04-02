@@ -12,7 +12,7 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ new_tickler_form.as_p }}
     <button type="submit" class="btn btn-outline-primary">Add</button>
 </form>
 
@@ -40,6 +40,7 @@
             <!-- form for day delta entry and button -->
             <form method="post">
                     {% csrf_token %}
+                    <!-- {{ push_task_form.as_p }} -->
                 <td class="align-middle">
 
                     <input type="text">
@@ -54,6 +55,7 @@
 
                 <form method="post">
                     {% csrf_token %}
+                    <!-- {{ completed_task_button.as_p }} -->
                     <button type="complete_task_button" name="completed_task"
                         class="btn btn-outline-secondary">Completed</button>
                 </form>

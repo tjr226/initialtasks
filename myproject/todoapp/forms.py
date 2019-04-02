@@ -9,4 +9,13 @@ class NewTicklerItemForm(forms.ModelForm):
         # next line picks out the tickler_text field from the TicklerItem model
         fields = ['tickler_text']
 
-    
+# class CompleteTaskForm(forms.ModelForm):
+
+#     class Meta:
+#         model = TicklerItem
+
+
+
+# class PushTaskForm(forms.ModelForm):
+#     class Meta:
+#         model = TicklerItem

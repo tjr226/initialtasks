@@ -18,7 +18,7 @@ def home(request):
             incoming_task_text = request.POST['tickler_text']
             new_tickler_task = TicklerItem.objects.create(tickler_text = incoming_task_text)
             return redirect('home')
-        if 'completed_task' in request.POST:
+        if 'completed' in request.POST:
             print("completed task button press")
             # to do
         if 'push' in request.POST:
@@ -26,7 +26,9 @@ def home(request):
             #
     else:
         new_tickler_form = NewTicklerItemForm()
+        # completed_task_button = CompleteTaskForm()
+        # push_task_form = PushTaskForm()
 
     items = TicklerItem.objects.exclude(completed_boolean=True)
 
-    return render(request, 'home.html', {'items': items, 'form': new_tickler_form})
+    return render(request, 'home.html', {'items': items, 'new_tickler_form': new_tickler_form})
