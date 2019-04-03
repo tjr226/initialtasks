@@ -25,7 +25,7 @@
             <th>Next review date</th>
             <th>How many days to ignore?</th>
             <th>Push it</th>
-            <th>Mark as completed</th>
+            <th>Delete it</th>
         </tr>
     </thead>
     <tbody>
@@ -35,15 +35,19 @@
                 {{ item.tickler_text }}
             </td>
             <td class="align-middle">
+                <!-- {% load tz %} -->
+                <!-- {% localtime on %} -->
                 {{ item.next_update_date }}
+                <!-- {% endlocaltime %} -->
             </td>
             <!-- form for day delta entry and button -->
             <form method="post">
                     {% csrf_token %}
-                    <!-- {{ push_task_form.as_p }} -->
+                    {{ push_task_form.as_p }}
                 <td class="align-middle">
+                    <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
 
-                    <input type="text">
+                    <input type="text" name="days_to_push">
                 </td>
                 <td>
                     <button type="submit" name="push" class="btn btn-outline-secondary">Push</button>
@@ -54,10 +58,12 @@
             <td class="align-middle">
 
                 <form method="post">
+
                     {% csrf_token %}
-                    <!-- {{ completed_task_button.as_p }} -->
-                    <button type="complete_task_button" name="completed_task"
-                        class="btn btn-outline-secondary">Completed</button>
+                    {{ delete_task_button.as_p }}
+                    <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
+                    <button type="delete_task_button" name="delete"
+                        class="btn btn-outline-secondary">Delete</button>
                 </form>
 
 

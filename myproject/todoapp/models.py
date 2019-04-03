@@ -8,7 +8,7 @@ class TicklerItem(models.Model):
     # -created_by   (user that created it)
     # -next_update_date (ideally will be the next date that the tickler item should bubble up to inbox)
 
-    tickler_text = models.TextField(max_length=4000)
+    tickler_text = models.TextField(max_length=4000, unique=True)
     # created_by = models.ForeignKey(User, related_name='tickler_items', on_delete='CASCADE')
     next_update_date = models.DateTimeField(auto_now_add=True)
     completed_boolean = models.BooleanField(default=False)
