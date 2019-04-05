@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TicklerItem
-from .forms import NewTicklerItemForm, DeleteTaskButton, PushTaskButton
+from .forms import NewTicklerItemForm, CompleteTaskButton, PushTaskButton
 from datetime import datetime, timedelta
 
 
@@ -12,7 +12,7 @@ def home(request):
     new_task_form = NewTicklerItemForm(request.POST)
 
     new_tickler_form = NewTicklerItemForm()
-    delete_task_button = DeleteTaskButton()
+    complete_task_button = CompleteTaskButton()
     push_task_button = PushTaskButton()
 
     # code to process form entries
@@ -36,9 +36,9 @@ def home(request):
 
             return redirect('home')
             #
-        elif 'delete' in request.POST:
-            print("delete task button press")
-            form = DeleteTaskButton(request.POST)
+        elif 'complete' in request.POST:
+            print("complete task button press")
+            form = CompleteTaskButton(request.POST)
             if form.is_valid():
                 x = request.POST['item_tickler_text']
                 tickler_to_update = TicklerItem.objects.get(tickler_text=x)
@@ -48,11 +48,9 @@ def home(request):
             return redirect('home')
     else:
         new_tickler_form = NewTicklerItemForm()
-        delete_task_button = DeleteTaskButton()
+        complete_task_button = CompleteTaskButton()
         push_task_button = PushTaskButton()
 
-        # completed_task_button = CompleteTaskForm()
-        # push_task_form = PushTaskForm()
 
     
 
@@ -65,5 +63,5 @@ def home(request):
         'items': items,
         'new_tickler_form': new_tickler_form,
         'push_task_button': push_task_button,
-        'delete_task_button': delete_task_button
+        'complete_task_button': complete_task_button
     })

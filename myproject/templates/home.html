@@ -24,8 +24,8 @@
             <th>Task</th>
             <th>Next review date</th>
             <th>How many days to ignore?</th>
-            <th>Push it</th>
-            <th>Delete it</th>
+            <th>Push</th>
+            <th>Complete</th>
         </tr>
     </thead>
     <tbody>
@@ -60,10 +60,10 @@
                 <form method="post">
 
                     {% csrf_token %}
-                    {{ delete_task_button.as_p }}
+                    {{ complete_task_button.as_p }}
                     <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
-                    <button type="delete_task_button" name="delete"
-                        class="btn btn-outline-secondary">Delete</button>
+                    <button type="complete_task_button" name="complete"
+                        class="btn btn-outline-secondary">Complete</button>
                 </form>
 
 
