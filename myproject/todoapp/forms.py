@@ -18,3 +18,8 @@ class PushTaskButton(forms.ModelForm):
     class Meta:
         model = TicklerItem
         fields = [] 
+
+class HideTaskButton(forms.ModelForm):
+    class Meta:
+        model = TicklerItem
+        fields = []

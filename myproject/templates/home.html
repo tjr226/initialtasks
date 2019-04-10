@@ -23,6 +23,7 @@
         <tr>
             <th>Task</th>
             <th>Next review date</th>
+            <th>Hide</th>
             <th>How many days to ignore?</th>
             <th>Push</th>
             <th>Complete</th>
@@ -40,13 +41,25 @@
                 {{ item.next_update_date }}
                 <!-- {% endlocaltime %} -->
             </td>
+            <!-- form for hide task button -->
+
+            <form method="post">
+                {% csrf_token %}
+                {{ hide_task_form.as_p }}
+                <td>
+                    <!-- this input element is needed to identify which tickler item -->
+                    <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
+                    <button type="submit" name="hide" class="btn btn-outline-secondary">Hide</button>
+                </td>
+            </form>
+
             <!-- form for day delta entry and button -->
             <form method="post">
-                    {% csrf_token %}
-                    {{ push_task_form.as_p }}
+                {% csrf_token %}
+                {{ push_task_form.as_p }}
                 <td class="align-middle">
+                    <!-- this input element is needed to identify which tickler item -->
                     <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
-
                     <input type="text" name="days_to_push">
                 </td>
                 <td>
