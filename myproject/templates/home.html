@@ -8,7 +8,7 @@
    -->
 {% block content %}
 
-<h1>TJR Tasks</h1>
+<h1>ToDoApp</h1>
 
 <form method="post">
     {% csrf_token %}
@@ -69,8 +69,8 @@
                 {{ push_task_form.as_p }}
                 <td class="align-middle">
                     <!-- this input element is needed to identify which tickler item -->
-                    <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
-                    <input type="text" name="days_to_push">
+                    <input value="{{item.id}}" name="item_id" type="hidden">
+                    <input type="number" min="1" name="days_to_push">
                 </td>
                 <td>
                     <button type="submit" name="push" class="btn btn-outline-secondary">Push</button>
@@ -84,7 +84,7 @@
 
                     {% csrf_token %}
                     {{ complete_task_button.as_p }}
-                    <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
+                    <input value="{{item.id}}" name="item_id" type="hidden">
                     <button type="complete_task_button" name="complete"
                         class="btn btn-outline-secondary">Complete</button>
                 </form>
