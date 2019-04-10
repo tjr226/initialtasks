@@ -23,3 +23,8 @@ class HideTaskButton(forms.ModelForm):
     class Meta:
         model = TicklerItem
         fields = []
+
+class UnhideAllTasksButton(forms.ModelForm):
+    class Meta:
+        model = TicklerItem
+        fields = []

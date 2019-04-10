@@ -4,23 +4,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TicklerItem
-from .forms import NewTicklerItemForm, CompleteTaskButton, PushTaskButton, HideTaskButton
+from .forms import NewTicklerItemForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton
 from datetime import datetime, timedelta
 
 
 def home(request):
-    new_task_form = NewTicklerItemForm(request.POST)
-
     new_tickler_form = NewTicklerItemForm()
     complete_task_button = CompleteTaskButton()
     push_task_button = PushTaskButton()
-    hide_task_button = HideTaskButton()
+    hidden_task_button = HideTaskButton()
+    unhide_all_tasks_button = UnhideAllTasksButton()
+                              
 
     # code to process form entries
     if request.method == 'POST':
-        
-
-
         #first section of if/elif, creates a new tickler task
         if 'tickler_text' in request.POST:
             incoming_task_text = request.POST['tickler_text']
@@ -71,6 +68,8 @@ def home(request):
         complete_task_button = CompleteTaskButton()
         push_task_button = PushTaskButton()
         hidden_task_button = HideTaskButton()
+        unhide_all_tasks_button = UnhideAllTasksButton()
+        
 
 
     
@@ -85,5 +84,6 @@ def home(request):
         'new_tickler_form': new_tickler_form,
         'push_task_button': push_task_button,
         'complete_task_button': complete_task_button,
-        'hidden_task_button': hidden_task_button
+        'hidden_task_button': hidden_task_button,
+        'unhide_all_tasks_button': unhide_all_tasks_button
     })

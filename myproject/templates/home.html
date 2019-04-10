@@ -16,6 +16,16 @@
     <button type="submit" class="btn btn-outline-primary">Add</button>
 </form>
 
+<br>
+
+<form method="post">
+    {% csrf_token %}
+    {{ unhide_all_tasks_button.as_p }}
+        <button type="submit" name="unhide" class="btn btn-outline-secondary">Unhide All</button>
+</form>
+
+<br>
+
 
 <table class="table">
 
