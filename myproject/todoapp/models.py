@@ -5,7 +5,7 @@ from django.utils.timezone import now
 class TicklerItem(models.Model):
     
     # text of todo - this must be unique
-    tickler_text = models.TextField(max_length=4000, unique=True)
+    tickler_text = models.TextField(max_length=4000)
 
     # next date it will come up in the system
     next_update_date = models.DateTimeField(auto_now_add=True)

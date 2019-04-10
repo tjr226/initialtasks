@@ -58,7 +58,7 @@
                 {{ hide_task_form.as_p }}
                 <td>
                     <!-- this input element is needed to identify which tickler item -->
-                    <input value="{{item.tickler_text}}" name="item_tickler_text" type="hidden">
+                    <input value="{{item.id}}" name="item_id" type="hidden">
                     <button type="submit" name="hide" class="btn btn-outline-secondary">Hide</button>
                 </td>
             </form>

@@ -20,22 +20,23 @@ def home(request):
     if request.method == 'POST':
         #first section of if/elif, creates a new tickler task
         if 'tickler_text' in request.POST:
+            # I don't need to figure out IDs for incoming tasks because they don't have one yet
             incoming_task_text = request.POST['tickler_text']
             new_tickler_task = TicklerItem.objects.create(
                 tickler_text=incoming_task_text)
             return redirect('home')
+        elif 'unhide' in request.POST:
+            items = TicklerItem.objects
+            items.update(hidden_boolean=False)
         #next section switches hidden_boolean to true
         elif 'hide' in request.POST:
             print("hide task button press")
-
             form = HideTaskButton(request.POST)
             if form.is_valid():
-                x = request.POST['item_tickler_text']
-                tickler_to_update = TicklerItem.objects.get(tickler_text=x)
-                print(tickler_to_update.hidden_boolean)
+                x = request.POST['item_id']
+                tickler_to_update = TicklerItem.objects.get(id=x)
                 tickler_to_update.hidden_boolean = True
                 tickler_to_update.save()
-                print(tickler_to_update.hidden_boolean)
             return redirect('home')
         #next section changes the next_update_date by adding the input from the field
         elif 'push' in request.POST:
