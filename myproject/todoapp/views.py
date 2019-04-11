@@ -23,6 +23,7 @@ def home(request):
 
         # comments are below each IF/ELIF line
         if 'task_text' in request.POST:
+            print(request.POST)
             # create a new task POST request
             # getting form text
             incoming_task_text = request.POST['task_text']
@@ -30,10 +31,11 @@ def home(request):
             # new task created
             new_task = TaskModel.objects.create(task_text=incoming_task_text)
             # check incoming days_to_push
+            days_to_push = int(days_to_push)
             if type(days_to_push) == type(int()):
                 if days_to_push > 0:
                     new_task.next_update_date = datetime.now() + timedelta(days=int(days_to_push))
-                    new_task.hidden_boolean = False
+                    new_task.hidden_boolean = True
             new_task.save()
             return redirect('home')
         elif 'unhide' in request.POST:
