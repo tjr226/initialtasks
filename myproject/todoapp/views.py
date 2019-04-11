@@ -3,13 +3,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # copied from django-boards
 from django.http import HttpResponse
-from .models import TaskItem
-from .forms import NewTaskItemForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton
+from .models import TaskModel
+from .forms import NewTaskForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton
 from datetime import datetime, timedelta
 
 
 def home(request):
-    new_task_form = NewTaskItemForm()
+    new_task_form = NewTaskForm()
     complete_task_button = CompleteTaskButton()
     push_task_button = PushTaskButton()
     hidden_task_button = HideTaskButton()
@@ -22,18 +22,18 @@ def home(request):
         if 'task_text' in request.POST:
             # I don't need to figure out IDs for incoming tasks because they don't have one yet
             incoming_task_text = request.POST['task_text']
-            new_task_task = TaskItem.objects.create(
+            new_task_task = TaskModel.objects.create(
                 task_text=incoming_task_text)
             return redirect('home')
         elif 'unhide' in request.POST:
-            items_to_unhide = TaskItem.objects
-            items_to_unhide.update(hidden_boolean=False)
+            tasks_to_unhide = TaskModel.objects
+            tasks_to_unhide.update(hidden_boolean=False)
         #next section switches hidden_boolean to true
         elif 'hide' in request.POST:
             form = HideTaskButton(request.POST)
             if form.is_valid():
-                form_item_id = request.POST['item_id']
-                task_to_update = TaskItem.objects.get(id=form_item_id)
+                form_task_id = request.POST['task_id']
+                task_to_update = TaskModel.objects.get(id=form_task_id)
                 task_to_update.hidden_boolean = True
                 task_to_update.save()
             return redirect('home')
@@ -41,9 +41,9 @@ def home(request):
         elif 'push' in request.POST:
             form = PushTaskButton(request.POST)
             if form.is_valid():
-                form_item_id = request.POST['item_id']
+                form_task_id = request.POST['task_id']
                 days_to_push = request.POST['days_to_push']
-                task_to_update = TaskItem.objects.get(id=form_item_id)
+                task_to_update = TaskModel.objects.get(id=form_task_id)
                 task_to_update.next_update_date = datetime.now() + timedelta(days=int(days_to_push))
                 task_to_update.save()
 
@@ -53,30 +53,24 @@ def home(request):
         elif 'complete' in request.POST:
             form = CompleteTaskButton(request.POST)
             if form.is_valid():
-                form_item_id = request.POST['item_id']
-                task_to_update = TaskItem.objects.get(id=form_item_id)
+                form_task_id = request.POST['task_id']
+                task_to_update = TaskModel.objects.get(id=form_task_id)
                 task_to_update.completed_boolean = True
                 task_to_update.save()
 
             return redirect('home')
-    else:
-        new_task_form = NewTaskItemForm()
-        complete_task_button = CompleteTaskButton()
-        push_task_button = PushTaskButton()
-        hidden_task_button = HideTaskButton()
-        unhide_all_tasks_button = UnhideAllTasksButton()
-        
 
-
+    # end IF statement to process POST requests
     
     # first grab all Tasks that are not complete or hidden. then sort them by next_update_date
-    items_to_render = TaskItem.objects.exclude(completed_boolean=True).exclude(hidden_boolean=True)
-    items_to_render = items.order_by('next_update_date')
+    tasks_to_render = TaskModel.objects.exclude(completed_boolean=True).exclude(hidden_boolean=True)
+    tasks_to_render = tasks_to_render.order_by('next_update_date')
 
-    
+    # render page using Django
+
 
     return render(request, 'home.html', {
-        'items': items_to_render,
+        'tasks': tasks_to_render,
         'new_task_form': new_task_form,
         'push_task_button': push_task_button,
         'complete_task_button': complete_task_button,

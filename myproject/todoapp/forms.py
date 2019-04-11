@@ -1,30 +1,29 @@
 from django import forms
-from .models import TaskItem
+from .models import TaskModel
 
-class NewTaskItemForm(forms.ModelForm):
-    # task = forms.CharField(widget=forms.Textarea(), max_length=4000)
+class NewTaskForm(forms.ModelForm):
 
     class Meta:
-        model = TaskItem
-        # next line picks out the tickler_text field from the TicklerItem model
+        model = TaskModel
+        # next line picks out the task_text field from the TaskModel
         fields = ['task_text']
 
 class CompleteTaskButton(forms.ModelForm):
     class Meta:
-        model = TaskItem
+        model = TaskModel
         fields = []
         
 class PushTaskButton(forms.ModelForm):
     class Meta:
-        model = TaskItem
+        model = TaskModel
         fields = [] 
 
 class HideTaskButton(forms.ModelForm):
     class Meta:
-        model = TaskItem
+        model = TaskModel
         fields = []
 
 class UnhideAllTasksButton(forms.ModelForm):
     class Meta:
-        model = TaskItem
+        model = TaskModel
         fields = []

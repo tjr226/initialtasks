@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
-class TaskItem(models.Model):
+class TaskModel(models.Model):
     
     # text of todo
     task_text = models.TextField(max_length=4000)
