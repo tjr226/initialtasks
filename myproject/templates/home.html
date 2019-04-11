@@ -23,15 +23,15 @@
 <form method="post">
     {% csrf_token %}
     {{ unhide_all_tasks_button.as_p }}
-        <button type="submit" name="unhide" class="btn btn-outline-secondary">Unhide All</button>
+    <button type="submit" name="unhide" class="btn btn-outline-secondary">Unhide All</button>
 </form>
 
 <br>
 
 
 <table class="table">
-
     <thead class="thead-dark">
+        <!-- first row of table -->
         <tr>
             <th>Task</th>
             <th>Next review date</th>
@@ -42,19 +42,21 @@
         </tr>
     </thead>
     <tbody>
+        <!-- django - renders each task that was returned by the home() function in views.py  -->
+        <!-- note - names are needed on input and button elements for the views.py home() function to
+            properly process incoming POST requests -->
         {% for task in tasks %}
         <tr>
             <td class="align-middle">
+                <!-- displays task text -->
                 {{ task.task_text }}
             </td>
             <td class="align-middle">
-                <!-- {% load tz %} -->
-                <!-- {% localtime on %} -->
+                <!-- displays next update date -->
                 {{ task.next_update_date }}
-                <!-- {% endlocaltime %} -->
             </td>
-            <!-- form for hide task button -->
 
+            <!-- form for hide task button -->
             <form method="post">
                 {% csrf_token %}
                 {{ hide_task_form.as_p }}
@@ -72,6 +74,9 @@
                 <td class="align-middle">
                     <!-- this input element is needed to identify which task -->
                     <input value="{{task.id}}" name="task_id" type="hidden">
+                    <!-- entry box for how many days to push, min="1" forces positive integers
+                        note - min="1" only forces positive ints on the HTML side
+                        it's not perfect -->
                     <input type="number" min="1" name="days_to_push">
                 </td>
                 <td>
@@ -83,7 +88,7 @@
             <td class="align-middle">
 
                 <form method="post">
-
+                    <!-- form to complete task -->
                     {% csrf_token %}
                     {{ complete_task_button.as_p }}
                     <input value="{{task.id}}" name="task_id" type="hidden">

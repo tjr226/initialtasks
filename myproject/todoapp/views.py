@@ -45,6 +45,7 @@ def home(request):
                 days_to_push = request.POST['days_to_push']
                 task_to_update = TaskModel.objects.get(id=form_task_id)
                 task_to_update.next_update_date = datetime.now() + timedelta(days=int(days_to_push))
+                task_to_update.hidden_boolean = True
                 task_to_update.save()
 
             return redirect('home')
