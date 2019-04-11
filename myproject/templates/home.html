@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 <!-- 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
@@ -11,7 +12,9 @@
 <!-- form to create a new task -->
 <form method="post">
     {% csrf_token %}
+    
     {{ new_task_form.as_p }}
+
     <button type="submit" class="btn btn-outline-primary">Add</button>
 </form>
 
