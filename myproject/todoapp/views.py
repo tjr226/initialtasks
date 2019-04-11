@@ -7,29 +7,35 @@ from .models import TaskModel
 from .forms import NewTaskForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton
 from datetime import datetime, timedelta
 
-
 def home(request):
+    # create vars for all Django forms from forms.py
+    # these are needed for the return render() function at the end of this home() function
     new_task_form = NewTaskForm()
     complete_task_button = CompleteTaskButton()
     push_task_button = PushTaskButton()
     hidden_task_button = HideTaskButton()
     unhide_all_tasks_button = UnhideAllTasksButton()
-                              
 
     # code to process form entries
+    # buttons in Django are also form entries
+    # each path redirects back to home, reloading the page
     if request.method == 'POST':
-        #first section of if/elif, creates a new task
+
+        # comments are below each IF/ELIF line
         if 'task_text' in request.POST:
-            # I don't need to figure out IDs for incoming tasks because they don't have one yet
+            # create a new task POST request
+            # getting form text
             incoming_task_text = request.POST['task_text']
+            # new task created
             new_task_task = TaskModel.objects.create(
                 task_text=incoming_task_text)
             return redirect('home')
         elif 'unhide' in request.POST:
+            # unhide all tasks by setting hidden_boolean to False for all tasks
             tasks_to_unhide = TaskModel.objects
             tasks_to_unhide.update(hidden_boolean=False)
-        #next section switches hidden_boolean to true
         elif 'hide' in request.POST:
+            # hide individual task by setting hidden_boolean to True
             form = HideTaskButton(request.POST)
             if form.is_valid():
                 form_task_id = request.POST['task_id']
@@ -37,21 +43,23 @@ def home(request):
                 task_to_update.hidden_boolean = True
                 task_to_update.save()
             return redirect('home')
-        #next section changes the next_update_date by adding the input from the field
         elif 'push' in request.POST:
+            # pushes tasks by adding the days_to_push form entry to the current date
+            # also hides all pushed tasks
             form = PushTaskButton(request.POST)
             if form.is_valid():
                 form_task_id = request.POST['task_id']
                 days_to_push = request.POST['days_to_push']
                 task_to_update = TaskModel.objects.get(id=form_task_id)
+                # sets next_update_date by adding days_to_push to the current date
                 task_to_update.next_update_date = datetime.now() + timedelta(days=int(days_to_push))
+                # hides task
                 task_to_update.hidden_boolean = True
                 task_to_update.save()
 
             return redirect('home')
-        
-        # this section flips the completed boolean
         elif 'complete' in request.POST:
+            # completes tasks by setting Completed boolean to True
             form = CompleteTaskButton(request.POST)
             if form.is_valid():
                 form_task_id = request.POST['task_id']
@@ -61,14 +69,13 @@ def home(request):
 
             return redirect('home')
 
-    # end IF statement to process POST requests
-    
+    # end IF statements to process POST requests
+
     # first grab all Tasks that are not complete or hidden. then sort them by next_update_date
     tasks_to_render = TaskModel.objects.exclude(completed_boolean=True).exclude(hidden_boolean=True)
     tasks_to_render = tasks_to_render.order_by('next_update_date')
 
     # render page using Django
-
 
     return render(request, 'home.html', {
         'tasks': tasks_to_render,
