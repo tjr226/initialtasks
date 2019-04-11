@@ -2,10 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
-class TicklerItem(models.Model):
+class TaskItem(models.Model):
     
-    # text of todo - this must be unique
-    tickler_text = models.TextField(max_length=4000)
+    # text of todo
+    task_text = models.TextField(max_length=4000)
 
     # next date it will come up in the system
     next_update_date = models.DateTimeField(auto_now_add=True)
@@ -17,4 +17,4 @@ class TicklerItem(models.Model):
     hidden_boolean = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.tickler_text
+        return self.task_text

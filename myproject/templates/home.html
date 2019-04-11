@@ -12,7 +12,7 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ new_tickler_form.as_p }}
+    {{ new_task_form.as_p }}
     <button type="submit" class="btn btn-outline-primary">Add</button>
 </form>
 
@@ -43,7 +43,7 @@
         {% for item in items %}
         <tr>
             <td class="align-middle">
-                {{ item.tickler_text }}
+                {{ item.task_text }}
             </td>
             <td class="align-middle">
                 <!-- {% load tz %} -->
@@ -57,7 +57,7 @@
                 {% csrf_token %}
                 {{ hide_task_form.as_p }}
                 <td>
-                    <!-- this input element is needed to identify which tickler item -->
+                    <!-- this input element is needed to identify which task item -->
                     <input value="{{item.id}}" name="item_id" type="hidden">
                     <button type="submit" name="hide" class="btn btn-outline-secondary">Hide</button>
                 </td>
@@ -68,7 +68,7 @@
                 {% csrf_token %}
                 {{ push_task_form.as_p }}
                 <td class="align-middle">
-                    <!-- this input element is needed to identify which tickler item -->
+                    <!-- this input element is needed to identify which task item -->
                     <input value="{{item.id}}" name="item_id" type="hidden">
                     <input type="number" min="1" name="days_to_push">
                 </td>
