@@ -3,7 +3,7 @@ from .models import TaskModel
 
 class NewTaskForm(forms.ModelForm):
     # form for new tasks
-
+    days_to_push = forms.IntegerField(required=False)
     class Meta:
         model = TaskModel
         # next line picks out the task_text field from the TaskModel

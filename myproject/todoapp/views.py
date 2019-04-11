@@ -26,9 +26,15 @@ def home(request):
             # create a new task POST request
             # getting form text
             incoming_task_text = request.POST['task_text']
+            days_to_push = request.POST['days_to_push']
             # new task created
-            new_task_task = TaskModel.objects.create(
-                task_text=incoming_task_text)
+            new_task = TaskModel.objects.create(task_text=incoming_task_text)
+            # check incoming days_to_push
+            if type(days_to_push) == type(int()):
+                if days_to_push > 0:
+                    new_task.next_update_date = datetime.now() + timedelta(days=int(days_to_push))
+                    new_task.hidden_boolean = False
+            new_task.save()
             return redirect('home')
         elif 'unhide' in request.POST:
             # unhide all tasks by setting hidden_boolean to False for all tasks
