@@ -23,14 +23,19 @@ def home(request):
 
         # comments are below each IF/ELIF line
         if 'task_text' in request.POST:
-            print(request.POST)
+            
             # create a new task POST request
             # getting form text
             incoming_task_text = request.POST['task_text']
             days_to_push = request.POST['days_to_push']
             # new task created
             new_task = TaskModel.objects.create(task_text=incoming_task_text)
-            # check incoming days_to_push
+            
+            # if no entry in days_to_push field, redirect home. no more action necessary
+            if days_to_push == "":
+                return redirect('home')
+
+            # cast incoming days_to_push string to int
             days_to_push = int(days_to_push)
             if type(days_to_push) == type(int()):
                 if days_to_push > 0:
