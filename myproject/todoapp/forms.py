@@ -32,3 +32,9 @@ class UnhideAllTasksButton(forms.ModelForm):
     class Meta:
         model = TaskModel
         fields = []
+
+class UnhideTodayTasksButton(forms.ModelForm):
+    # button to unhide tasks dated 24hrs from now or less
+    class Meta:
+        model = TaskModel
+        fields = []

@@ -4,8 +4,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TaskModel
-from .forms import NewTaskForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton
+from .forms import NewTaskForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton, UnhideTodayTasksButton
 from datetime import datetime, timedelta
+from django.utils import timezone
+
 
 def home(request):
     # create vars for all Django forms from forms.py
@@ -15,6 +17,7 @@ def home(request):
     push_task_button = PushTaskButton()
     hidden_task_button = HideTaskButton()
     unhide_all_tasks_button = UnhideAllTasksButton()
+    unhide_today_tasks_button = UnhideTodayTasksButton()
 
     # code to process form entries
     # buttons in Django are also form entries
@@ -23,14 +26,14 @@ def home(request):
 
         # comments are below each IF/ELIF line
         if 'task_text' in request.POST:
-            
+
             # create a new task POST request
             # getting form text
             incoming_task_text = request.POST['task_text']
             days_to_push = request.POST['days_to_push']
             # new task created
             new_task = TaskModel.objects.create(task_text=incoming_task_text)
-            
+
             # if no entry in days_to_push field, redirect home. no more action necessary
             if days_to_push == "":
                 return redirect('home')
@@ -43,10 +46,32 @@ def home(request):
                     new_task.hidden_boolean = True
             new_task.save()
             return redirect('home')
-        elif 'unhide' in request.POST:
+        elif 'unhide_all' in request.POST:
             # unhide all tasks by setting hidden_boolean to False for all tasks
             tasks_to_unhide = TaskModel.objects
             tasks_to_unhide.update(hidden_boolean=False)
+        elif 'unhide_today' in request.POST:
+            # unhide uncompleted tasks from today only
+            # pass
+            # pass so that I can work without breaking the active server
+            
+            # render tasks that are not complete, and also within 24 hrs
+            tasks_to_render = TaskModel.objects.exclude(
+                completed_boolean=True)
+            
+            tasks_to_render = tasks_to_render.order_by('next_update_date')
+            tasks_to_render.exclude(next_update_date=(timezone.now() + timedelta(days=1)))
+     
+            return render(request, 'home.html', {
+                'tasks': tasks_to_render,
+                'new_task_form': new_task_form,
+                'push_task_button': push_task_button,
+                'complete_task_button': complete_task_button,
+                'hidden_task_button': hidden_task_button,
+                'unhide_all_tasks_button': unhide_all_tasks_button,
+                'unhide_today_tasks_button': unhide_today_tasks_button,
+            })
+
         elif 'hide' in request.POST:
             # hide individual task by setting hidden_boolean to True
             form = HideTaskButton(request.POST)
@@ -85,7 +110,8 @@ def home(request):
     # end IF statements to process POST requests
 
     # first grab all Tasks that are not complete or hidden. then sort them by next_update_date
-    tasks_to_render = TaskModel.objects.exclude(completed_boolean=True).exclude(hidden_boolean=True)
+    tasks_to_render = TaskModel.objects.exclude(
+        completed_boolean=True).exclude(hidden_boolean=True)
     tasks_to_render = tasks_to_render.order_by('next_update_date')
 
     # render page using Django
@@ -96,5 +122,6 @@ def home(request):
         'push_task_button': push_task_button,
         'complete_task_button': complete_task_button,
         'hidden_task_button': hidden_task_button,
-        'unhide_all_tasks_button': unhide_all_tasks_button
+        'unhide_all_tasks_button': unhide_all_tasks_button,
+        'unhide_today_tasks_button': unhide_today_tasks_button,
     })

@@ -8,7 +8,7 @@
   </nav>
    -->
 {% block content %}
-<br>
+
 <!-- form to create a new task -->
 <form method="post">
     {% csrf_token %}
@@ -18,16 +18,22 @@
     <button type="submit" class="btn btn-outline-primary">Add</button>
 </form>
 
-<br>
 
+<div class="row_of_unique_buttons">
 <!-- button to unhide all tasks -->
 <form method="post">
     {% csrf_token %}
     {{ unhide_all_tasks_button.as_p }}
-    <button type="submit" name="unhide" class="btn btn-outline-secondary">Unhide All</button>
+    <button type="submit" name="unhide_all" class="btn btn-outline-secondary">Unhide All</button>
 </form>
 
-<br>
+<form method="post">
+    {% csrf_token %}
+    {{ unhide_today_tasks_button.as_p }}
+    <button type="submit" name="unhide_today" class="btn btn-outline-secondary">Unhide Today</button>
+</form>
+<!-- end row_of_unique_buttons -->
+</div>
 
 
 <table class="table">
