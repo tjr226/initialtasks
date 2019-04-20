@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TaskModel
-from .forms import NewTaskForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton, UnhideTodayTasksButton
+from .forms import NewTaskForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton, HideAllTasksButton, ShowNextFiveTasksButton
 from datetime import datetime, timedelta
 from django.utils import timezone
 
@@ -17,7 +17,8 @@ def home(request):
     push_task_button = PushTaskButton()
     hidden_task_button = HideTaskButton()
     unhide_all_tasks_button = UnhideAllTasksButton()
-    unhide_today_tasks_button = UnhideTodayTasksButton()
+    hide_all_tasks_button = HideAllTasksButton()
+    show_next_five_tasks_button = ShowNextFiveTasksButton()
 
     # code to process form entries
     # buttons in Django are also form entries
@@ -50,28 +51,6 @@ def home(request):
             # unhide all tasks by setting hidden_boolean to False for all tasks
             tasks_to_unhide = TaskModel.objects
             tasks_to_unhide.update(hidden_boolean=False)
-        elif 'unhide_today' in request.POST:
-            # unhide uncompleted tasks from today only
-            # pass
-            # pass so that I can work without breaking the active server
-            
-            # render tasks that are not complete, and also within 24 hrs
-            tasks_to_render = TaskModel.objects.exclude(
-                completed_boolean=True)
-            
-            tasks_to_render = tasks_to_render.order_by('next_update_date')
-            tasks_to_render.exclude(next_update_date=(timezone.now() + timedelta(days=1)))
-     
-            return render(request, 'home.html', {
-                'tasks': tasks_to_render,
-                'new_task_form': new_task_form,
-                'push_task_button': push_task_button,
-                'complete_task_button': complete_task_button,
-                'hidden_task_button': hidden_task_button,
-                'unhide_all_tasks_button': unhide_all_tasks_button,
-                'unhide_today_tasks_button': unhide_today_tasks_button,
-            })
-
         elif 'hide' in request.POST:
             # hide individual task by setting hidden_boolean to True
             form = HideTaskButton(request.POST)
@@ -106,6 +85,46 @@ def home(request):
                 task_to_update.save()
 
             return redirect('home')
+        elif 'hide_all' in request.POST:
+            print('hide all')
+            form = HideAllTasksButton(request.POST)
+            if form.is_valid():
+                all_current_tasks = TaskModel.objects.exclude(completed_boolean=True)
+                all_current_tasks.update(hidden_boolean=True)
+            return redirect('home')
+
+        elif 'show_next_five_tasks_button' in request.POST:
+            print("show next five clicked")
+            form = ShowNextFiveTasksButton(request.POST)
+            if form.is_valid():
+                all_tasks = TaskModel.objects.exclude(completed_boolean=True)
+                
+                all_tasks.update(hidden_boolean=False)
+                # print(all_tasks)
+                all_tasks = all_tasks.order_by('next_update_date')
+                # print(all_tasks)
+                tasks_to_render = all_tasks[:5]
+                # print(tasks_to_render)
+
+                TaskModel.objects.exclude(id__in=tasks_to_render).update(hidden_boolean=True)
+
+
+                return render(request, 'home.html', {
+                    'tasks': tasks_to_render,
+                    'new_task_form': new_task_form,
+                    'push_task_button': push_task_button,
+                    'complete_task_button': complete_task_button,
+                    'hidden_task_button': hidden_task_button,
+                    'unhide_all_tasks_button': unhide_all_tasks_button,
+                    'hide_all_tasks_button': hide_all_tasks_button,
+                    'show_next_five_tasks_button': show_next_five_tasks_button,
+                })
+
+            else:
+                redirect('home')
+
+
+
 
     # end IF statements to process POST requests
 
@@ -123,5 +142,6 @@ def home(request):
         'complete_task_button': complete_task_button,
         'hidden_task_button': hidden_task_button,
         'unhide_all_tasks_button': unhide_all_tasks_button,
-        'unhide_today_tasks_button': unhide_today_tasks_button,
+        'hide_all_tasks_button': hide_all_tasks_button,
+        'show_next_five_tasks_button': show_next_five_tasks_button,
     })

@@ -26,11 +26,21 @@
     <button type="submit" name="unhide_all" class="btn btn-outline-secondary">Unhide All</button>
 </form>
 
+<!-- button to hide all tasks -->
 <form method="post">
     {% csrf_token %}
-    {{ unhide_today_tasks_button.as_p }}
-    <button type="submit" name="unhide_today" class="btn btn-outline-secondary">Unhide Today</button>
+    {{ hide_all_tasks_button.as_p }}
+    <button type="submit" name="hide_all" class="btn btn-outline-secondary">Hide All</button>
 </form>
+
+
+<!-- button to show next 5 tasks -->
+<form method="post">
+    {% csrf_token %}
+    {{ show_next_five_tasks_button.as_p }}
+    <button type="submit" name="show_next_five_tasks_button" class="btn btn-outline-secondary">Show Next Five Tasks</button>
+</form>
+
 <!-- end row_of_unique_buttons -->
 </div>
 
