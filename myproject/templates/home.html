@@ -1,55 +1,66 @@
 {% extends 'base.html' %}
-<!-- 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">Django Boards</a>
-    </div>
-  </nav>
-   -->
+
 {% block content %}
 
-<!-- form to create a new task -->
-<form method="post">
-    {% csrf_token %}
-    
-    {{ new_task_form.as_p }}
-
-    <button type="submit" class="btn btn-outline-primary">Add</button>
-</form>
-
-
-<div class="row_of_unique_buttons">
-<!-- button to unhide all tasks -->
-<form method="post">
-    {% csrf_token %}
-    {{ unhide_all_tasks_button.as_p }}
-    <button type="submit" name="unhide_all" class="btn btn-outline-secondary">Unhide All</button>
-</form>
-
-<!-- button to hide all tasks -->
-<form method="post">
-    {% csrf_token %}
-    {{ hide_all_tasks_button.as_p }}
-    <button type="submit" name="hide_all" class="btn btn-outline-secondary">Hide All</button>
-</form>
+<style>
+    .top_section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0px;
+    }
+</style>
 
 
-<!-- button to show next 5 tasks -->
-<form method="post">
-    {% csrf_token %}
-    {{ show_next_five_tasks_button.as_p }}
-    <button type="submit" name="show_next_five_tasks_button" class="btn btn-outline-secondary">Show Next Five Tasks</button>
-</form>
+<div class="top_section">
 
-<form method="post">
-    {% csrf_token %}
-    {{ show_completed_tasks_button.as_p }}
-    <button type="submit" name="show_completed_tasks_button" class="btn btn-outline-secondary">Show Completed Tasks</button>
-</form>
+    <!-- form to create a new task -->
+    <form method="post">
+        {% csrf_token %}
 
-<!-- end row_of_unique_buttons -->
+        {{ new_task_form.as_p }}
+
+        <button type="submit" class="btn btn-outline-primary">Add</button>
+    </form>
+
+
+    <div class="row_of_unique_buttons">
+        <!-- button to unhide all tasks -->
+        <form method="post">
+            {% csrf_token %}
+            {{ unhide_all_tasks_button.as_p }}
+            <button type="submit" name="unhide_all" class="btn btn-outline-secondary">Unhide All</button>
+        </form>
+
+        <!-- button to hide all tasks -->
+        <form method="post">
+            {% csrf_token %}
+            {{ hide_all_tasks_button.as_p }}
+            <button type="submit" name="hide_all" class="btn btn-outline-secondary">Hide All</button>
+        </form>
+
+
+        <!-- button to show next 5 tasks -->
+        <form method="post">
+            {% csrf_token %}
+            {{ show_next_five_tasks_button.as_p }}
+            <button type="submit" name="show_next_five_tasks_button" class="btn btn-outline-secondary">Show Next Five
+                Tasks</button>
+        </form>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ show_completed_tasks_button.as_p }}
+            <button type="submit" name="show_completed_tasks_button" class="btn btn-outline-secondary">Show Completed
+                Tasks</button>
+        </form>
+
+        <!-- end row_of_unique_buttons -->
+    </div>
+
+
+    <!-- end form and buttons -->
 </div>
-
 
 <table class="table">
     <thead class="thead-dark">
