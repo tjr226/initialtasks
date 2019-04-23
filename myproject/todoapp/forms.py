@@ -51,3 +51,8 @@ class ShowNextFiveTasksButton(forms.ModelForm):
         model = TaskModel
         fields = []
 
+class ShowCompletedTasksButton(forms.ModelForm):
+    # button to hide all tasks
+    class Meta:
+        model = TaskModel
+        fields = []
