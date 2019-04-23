@@ -52,8 +52,10 @@
             <th>Task</th>
             <th>Next review date</th>
             <th>Hide</th>
-            <th>How many days to ignore?</th>
-            <th>Push</th>
+            <th>Hours to push</th>
+            <th>Push hours</th>
+            <th>Days to push</th>
+            <th>Push days</th>
             <th>Complete</th>
         </tr>
     </thead>
@@ -83,10 +85,26 @@
                 </td>
             </form>
 
+            <form method="post">
+                {% csrf_token %}
+                {{ push_task_form_hours.as_p }}
+                <td class="align-middle">
+                    <!-- this input element is needed to identify which task -->
+                    <input value="{{task.id}}" name="task_id" type="hidden">
+                    <!-- entry box for how many days to push, min="1" forces positive integers
+                        note - min="1" only forces positive ints on the HTML side
+                        it's not perfect -->
+                    <input type="number" min="1" name="hours_to_push">
+                </td>
+                <td>
+                    <button type="submit" name="push_hours" class="btn btn-outline-secondary">Push</button>
+                </td>
+            </form>
+
             <!-- form for day delta entry and button -->
             <form method="post">
                 {% csrf_token %}
-                {{ push_task_form.as_p }}
+                {{ push_task_form_days.as_p }}
                 <td class="align-middle">
                     <!-- this input element is needed to identify which task -->
                     <input value="{{task.id}}" name="task_id" type="hidden">
@@ -96,7 +114,7 @@
                     <input type="number" min="1" name="days_to_push">
                 </td>
                 <td>
-                    <button type="submit" name="push" class="btn btn-outline-secondary">Push</button>
+                    <button type="submit" name="push_days" class="btn btn-outline-secondary">Push</button>
                 </td>
             </form>
 

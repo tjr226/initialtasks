@@ -15,7 +15,13 @@ class CompleteTaskButton(forms.ModelForm):
         model = TaskModel
         fields = []
         
-class PushTaskButton(forms.ModelForm):
+class PushTaskButtonDays(forms.ModelForm):
+    # button to push tasks into the future
+    class Meta:
+        model = TaskModel
+        fields = [] 
+
+class PushTaskButtonHours(forms.ModelForm):
     # button to push tasks into the future
     class Meta:
         model = TaskModel

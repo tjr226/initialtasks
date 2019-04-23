@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TaskModel
-from .forms import NewTaskForm, CompleteTaskButton, PushTaskButton, HideTaskButton, UnhideAllTasksButton, HideAllTasksButton, ShowNextFiveTasksButton
+from .forms import NewTaskForm, CompleteTaskButton, PushTaskButtonHours, PushTaskButtonDays, HideTaskButton, UnhideAllTasksButton, HideAllTasksButton, ShowNextFiveTasksButton
 from datetime import datetime, timedelta
 from django.utils import timezone
 
@@ -14,7 +14,8 @@ def home(request):
     # these are needed for the return render() function at the end of this home() function
     new_task_form = NewTaskForm()
     complete_task_button = CompleteTaskButton()
-    push_task_button = PushTaskButton()
+    push_task_button_hours = PushTaskButtonHours()
+    push_task_button_days = PushTaskButtonDays()
     hidden_task_button = HideTaskButton()
     unhide_all_tasks_button = UnhideAllTasksButton()
     hide_all_tasks_button = HideAllTasksButton()
@@ -60,10 +61,27 @@ def home(request):
                 task_to_update.hidden_boolean = True
                 task_to_update.save()
             return redirect('home')
-        elif 'push' in request.POST:
+
+        elif 'push_hours' in request.POST:
+                # pushes tasks by adding the days_to_push form entry to the current date
+                # also hides all pushed tasks
+            form = PushTaskButtonHours(request.POST)
+            if form.is_valid():
+                form_task_id = request.POST['task_id']
+                hours_to_push = request.POST['hours_to_push']
+                task_to_update = TaskModel.objects.get(id=form_task_id)
+                # sets next_update_date by adding days_to_push to the current date
+                task_to_update.next_update_date = datetime.now() + timedelta(hours=int(hours_to_push))
+                # hides task
+                task_to_update.hidden_boolean = True
+                task_to_update.save()
+
+            return redirect('home')
+
+        elif 'push_days' in request.POST:
             # pushes tasks by adding the days_to_push form entry to the current date
             # also hides all pushed tasks
-            form = PushTaskButton(request.POST)
+            form = PushTaskButtonDays(request.POST)
             if form.is_valid():
                 form_task_id = request.POST['task_id']
                 days_to_push = request.POST['days_to_push']
@@ -86,33 +104,36 @@ def home(request):
 
             return redirect('home')
         elif 'hide_all' in request.POST:
-            print('hide all')
+            # this request sets the hidden_boolean of all active tasks to TRUE
             form = HideAllTasksButton(request.POST)
             if form.is_valid():
-                all_current_tasks = TaskModel.objects.exclude(completed_boolean=True)
+                all_current_tasks = TaskModel.objects.exclude(
+                    completed_boolean=True)
+                # update boolean for all active (not completed) tasks
                 all_current_tasks.update(hidden_boolean=True)
             return redirect('home')
 
         elif 'show_next_five_tasks_button' in request.POST:
-            print("show next five clicked")
+            # this request hides all tasks, then unhides the next 5.
             form = ShowNextFiveTasksButton(request.POST)
             if form.is_valid():
+                # get all incomplete tasks
                 all_tasks = TaskModel.objects.exclude(completed_boolean=True)
-                
+                # unhide all tasks (you want to see all of the next 5, even if they are hidden)
                 all_tasks.update(hidden_boolean=False)
-                # print(all_tasks)
+                # sort all active tasks by the next update date
                 all_tasks = all_tasks.order_by('next_update_date')
-                # print(all_tasks)
+                # slice all_tasks and grab the first five, these will be rendered
                 tasks_to_render = all_tasks[:5]
-                # print(tasks_to_render)
-
-                TaskModel.objects.exclude(id__in=tasks_to_render).update(hidden_boolean=True)
-
+                # go back and hide all other tasks, otherwise they will pop up again b/c they aren't hidden
+                TaskModel.objects.exclude(
+                    id__in=tasks_to_render).update(hidden_boolean=True)
 
                 return render(request, 'home.html', {
                     'tasks': tasks_to_render,
                     'new_task_form': new_task_form,
-                    'push_task_button': push_task_button,
+                    'push_task_button_hours': push_task_button_hours,
+                    'push_task_button_days': push_task_button_days,
                     'complete_task_button': complete_task_button,
                     'hidden_task_button': hidden_task_button,
                     'unhide_all_tasks_button': unhide_all_tasks_button,
@@ -122,9 +143,6 @@ def home(request):
 
             else:
                 redirect('home')
-
-
-
 
     # end IF statements to process POST requests
 
@@ -138,7 +156,8 @@ def home(request):
     return render(request, 'home.html', {
         'tasks': tasks_to_render,
         'new_task_form': new_task_form,
-        'push_task_button': push_task_button,
+        'push_task_button_hours': push_task_button_hours,
+        'push_task_button_days': push_task_button_days,
         'complete_task_button': complete_task_button,
         'hidden_task_button': hidden_task_button,
         'unhide_all_tasks_button': unhide_all_tasks_button,
