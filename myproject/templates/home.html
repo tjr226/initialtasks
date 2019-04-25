@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load widget_tweaks %}
+
 {% block content %}
 
 <style>
@@ -9,17 +11,29 @@
         align-items: center;
         padding: 15px 0px;
     }
+
+    .top_section p {
+        /* border: 1px solid red; */
+        display: flex;
+        flex-direction:column;
+    }
+
+    #id_task_text {
+        height: 100px;
+    }
 </style>
 
 
 <div class="top_section">
 
     <!-- form to create a new task -->
+    
     <form method="post">
+
         {% csrf_token %}
 
         {{ new_task_form.as_p }}
-
+        
         <button type="submit" class="btn btn-outline-primary">Add</button>
     </form>
 
