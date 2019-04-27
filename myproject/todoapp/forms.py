@@ -33,7 +33,7 @@ class HideTaskButton(forms.ModelForm):
         model = TaskModel
         fields = []
 
-class UnhideAllTasksButton(forms.ModelForm):
+class ShowAllActiveTasksButton(forms.ModelForm):
     # button to unhide all tasks
     class Meta:
         model = TaskModel

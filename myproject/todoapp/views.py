@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TaskModel
-from .forms import NewTaskForm, CompleteTaskButton, PushTaskButtonHours, PushTaskButtonDays, HideTaskButton, UnhideAllTasksButton, HideAllTasksButton, ShowNextFiveTasksButton, ShowAccomplishedTasksButton
+from .forms import NewTaskForm, CompleteTaskButton, PushTaskButtonHours, PushTaskButtonDays, HideTaskButton, ShowAllActiveTasksButton, HideAllTasksButton, ShowNextFiveTasksButton, ShowAccomplishedTasksButton
 from datetime import datetime, timedelta
 from django.utils import timezone
 
@@ -17,7 +17,7 @@ def home(request):
     push_task_button_hours = PushTaskButtonHours()
     push_task_button_days = PushTaskButtonDays()
     hidden_task_button = HideTaskButton()
-    unhide_all_tasks_button = UnhideAllTasksButton()
+    show_all_active_tasks_button = ShowAllActiveTasksButton()
     hide_all_tasks_button = HideAllTasksButton()
     show_next_five_tasks_button = ShowNextFiveTasksButton()
     show_accomplished_tasks_button = ShowAccomplishedTasksButton()
@@ -49,8 +49,8 @@ def home(request):
                     new_task.hidden_boolean = True
             new_task.save()
             return redirect('home')
-        elif 'unhide_all' in request.POST:
-            # unhide all tasks by setting hidden_boolean to False for all tasks
+        elif 'show_all_active' in request.POST:
+            # show all tasks by setting hidden_boolean to False for all tasks
             tasks_to_unhide = TaskModel.objects
             tasks_to_unhide.update(hidden_boolean=False)
         elif 'hide' in request.POST:
@@ -137,7 +137,7 @@ def home(request):
                     'push_task_button_days': push_task_button_days,
                     'complete_task_button': complete_task_button,
                     'hidden_task_button': hidden_task_button,
-                    'unhide_all_tasks_button': unhide_all_tasks_button,
+                    'show_all_active_tasks_button': show_all_active_tasks_button,
                     'hide_all_tasks_button': hide_all_tasks_button,
                     'show_next_five_tasks_button': show_next_five_tasks_button,
                     'show_accomplished_tasks_button': show_accomplished_tasks_button,
@@ -163,7 +163,7 @@ def home(request):
                     'push_task_button_days': push_task_button_days,
                     'complete_task_button': complete_task_button,
                     'hidden_task_button': hidden_task_button,
-                    'unhide_all_tasks_button': unhide_all_tasks_button,
+                    'show_all_active_tasks_button': show_all_active_tasks_button,
                     'hide_all_tasks_button': hide_all_tasks_button,
                     'show_next_five_tasks_button': show_next_five_tasks_button,
                     'show_accomplished_tasks_button': show_accomplished_tasks_button,
@@ -187,7 +187,7 @@ def home(request):
         'push_task_button_days': push_task_button_days,
         'complete_task_button': complete_task_button,
         'hidden_task_button': hidden_task_button,
-        'unhide_all_tasks_button': unhide_all_tasks_button,
+        'show_all_active_tasks_button': show_all_active_tasks_button,
         'hide_all_tasks_button': hide_all_tasks_button,
         'show_next_five_tasks_button': show_next_five_tasks_button,
         'show_accomplished_tasks_button': show_accomplished_tasks_button,
