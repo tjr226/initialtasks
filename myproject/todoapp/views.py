@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # copied from django-boards
 from django.http import HttpResponse
 from .models import TaskModel
-from .forms import NewTaskForm, CompleteTaskButton, PushTaskButtonHours, PushTaskButtonDays, HideTaskButton, UnhideAllTasksButton, HideAllTasksButton, ShowNextFiveTasksButton, ShowCompletedTasksButton
+from .forms import NewTaskForm, CompleteTaskButton, PushTaskButtonHours, PushTaskButtonDays, HideTaskButton, UnhideAllTasksButton, HideAllTasksButton, ShowNextFiveTasksButton, ShowAccomplishedTasksButton
 from datetime import datetime, timedelta
 from django.utils import timezone
 
@@ -20,7 +20,7 @@ def home(request):
     unhide_all_tasks_button = UnhideAllTasksButton()
     hide_all_tasks_button = HideAllTasksButton()
     show_next_five_tasks_button = ShowNextFiveTasksButton()
-    show_completed_tasks_button = ShowCompletedTasksButton()
+    show_accomplished_tasks_button = ShowAccomplishedTasksButton()
 
     # code to process form entries
     # buttons in Django are also form entries
@@ -140,24 +140,24 @@ def home(request):
                     'unhide_all_tasks_button': unhide_all_tasks_button,
                     'hide_all_tasks_button': hide_all_tasks_button,
                     'show_next_five_tasks_button': show_next_five_tasks_button,
-                    'show_completed_tasks_button': show_completed_tasks_button,
+                    'show_accomplished_tasks_button': show_accomplished_tasks_button,
                 })
 
             else:
                 redirect('home')
 
-        elif 'show_completed_tasks_button' in request.POST:
+        elif 'show_accomplished_tasks_button' in request.POST:
             # this request hides all tasks, then unhides the next 5.
-            form = ShowCompletedTasksButton(request.POST)
+            form = ShowAccomplishedTasksButton(request.POST)
             if form.is_valid():
                 # get all incomplete tasks
-                completed_tasks = TaskModel.objects.exclude(completed_boolean=False)
+                accomplished_tasks = TaskModel.objects.exclude(completed_boolean=False)
                 # unhide all tasks (you want to see all of the next 5, even if they are hidden)
-                completed_tasks = completed_tasks.order_by('-next_update_date')
+                accomplished_tasks = accomplished_tasks.order_by('-next_update_date')
                 # slice all_tasks and grab the first five, these will be rendered
                 
                 return render(request, 'home.html', {
-                    'tasks': completed_tasks,
+                    'tasks': accomplished_tasks,
                     'new_task_form': new_task_form,
                     'push_task_button_hours': push_task_button_hours,
                     'push_task_button_days': push_task_button_days,
@@ -166,7 +166,7 @@ def home(request):
                     'unhide_all_tasks_button': unhide_all_tasks_button,
                     'hide_all_tasks_button': hide_all_tasks_button,
                     'show_next_five_tasks_button': show_next_five_tasks_button,
-                    'show_completed_tasks_button': show_completed_tasks_button,
+                    'show_accomplished_tasks_button': show_accomplished_tasks_button,
                 })
 
             else:
@@ -190,5 +190,5 @@ def home(request):
         'unhide_all_tasks_button': unhide_all_tasks_button,
         'hide_all_tasks_button': hide_all_tasks_button,
         'show_next_five_tasks_button': show_next_five_tasks_button,
-        'show_completed_tasks_button': show_completed_tasks_button,
+        'show_accomplished_tasks_button': show_accomplished_tasks_button,
     })
