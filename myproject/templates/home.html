@@ -15,35 +15,54 @@
     .top_section p {
         /* border: 1px solid red; */
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
     }
 
     #id_task_text {
         height: 100px;
     }
+
+    #id_project {
+        height: 50px;
+    }
+
+    .row_of_unique_buttons button {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    input {
+        display: block;
+        vertical-align: top; margin: 0;
+    }
+    .container {
+        max-width: 2000px;
+    }
 </style>
 
+
+<div class="container">
 
 <div class="top_section">
 
     <!-- form to create a new task -->
-    
+
     <form method="post">
 
         {% csrf_token %}
 
         {{ new_task_form.as_p }}
-        
+
         <button type="submit" class="btn btn-outline-primary">Add</button>
     </form>
 
 
     <div class="row_of_unique_buttons">
-        <!-- button to unhide all tasks -->
+        <!-- button to show all active tasks -->
         <form method="post">
             {% csrf_token %}
-            {{ unhide_all_tasks_button.as_p }}
-            <button type="submit" name="unhide_all" class="btn btn-outline-secondary">Unhide All</button>
+            {{ show_all_active_tasks_button.as_p }}
+            <button type="submit" name="show_all_active" class="btn btn-outline-secondary">Show All</button>
         </form>
 
         <!-- button to hide all tasks -->
@@ -65,7 +84,8 @@
         <form method="post">
             {% csrf_token %}
             {{ show_accomplished_tasks_button.as_p }}
-            <button type="submit" name="show_accomplished_tasks_button" class="btn btn-outline-secondary">Show Accomplished
+            <button type="submit" name="show_accomplished_tasks_button" class="btn btn-outline-secondary">Show
+                Accomplished
                 Tasks</button>
         </form>
 
@@ -76,17 +96,17 @@
     <!-- end form and buttons -->
 </div>
 
-<table class="table">
+<table class="table table-hover">
     <thead class="thead-dark">
         <!-- first row of table -->
         <tr>
             <th>Task</th>
-            <th>Next review date</th>
+            <!-- <th>Next review date</th> -->
+            <th>Project</th>
             <th>Hide</th>
             <th>Hours to push</th>
-            <th>Push hours</th>
             <th>Days to push</th>
-            <th>Push days</th>
+            <th>Push task</th>
             <th>Complete</th>
         </tr>
     </thead>
@@ -100,11 +120,13 @@
                 <!-- displays task text -->
                 {{ task.task_text }}
             </td>
-            <td class="align-middle">
-                <!-- displays next update date -->
-                {{ task.next_update_date }}
-            </td>
 
+            <!-- <td class="align-middle">
+                {{ task.next_update_date }}
+            </td> -->
+            <td class="align-middle">
+                {{ task.project }}
+            </td>
             <!-- form for hide task button -->
             <form method="post">
                 {% csrf_token %}
@@ -118,37 +140,24 @@
 
             <form method="post">
                 {% csrf_token %}
-                {{ push_task_form_hours.as_p }}
-                <td class="align-middle">
-                    <!-- this input element is needed to identify which task -->
-                    <input value="{{task.id}}" name="task_id" type="hidden">
-                    <!-- entry box for how many days to push, min="1" forces positive integers
-                        note - min="1" only forces positive ints on the HTML side
-                        it's not perfect -->
-                    <input type="number" min="1" name="hours_to_push">
-                </td>
+                {{ push_task.as_p }}
+
+                <div class="input-group input-group-sm ">
+                        <td style="width:150px">
+                            <input class="form-control" type="number" min="0" name="hours_to_push">
+                        </td>
+                        <td style="width:150px">
+                            <input class="form-control" type="number" min="0" name="days_to_push">
+                        </td>
+               
+                </div>
                 <td>
-                    <button type="submit" name="push_hours" class="btn btn-outline-secondary">Push</button>
+                    <input value="{{task.id}}" name="task_id" type="hidden">
+                    <button type="submit" name="push_task" class="btn btn-outline-secondary">Push</button>
+                </td>
+
                 </td>
             </form>
-
-            <!-- form for day delta entry and button -->
-            <form method="post">
-                {% csrf_token %}
-                {{ push_task_form_days.as_p }}
-                <td class="align-middle">
-                    <!-- this input element is needed to identify which task -->
-                    <input value="{{task.id}}" name="task_id" type="hidden">
-                    <!-- entry box for how many days to push, min="1" forces positive integers
-                        note - min="1" only forces positive ints on the HTML side
-                        it's not perfect -->
-                    <input type="number" min="1" name="days_to_push">
-                </td>
-                <td>
-                    <button type="submit" name="push_days" class="btn btn-outline-secondary">Push</button>
-                </td>
-            </form>
-
 
             <td class="align-middle">
 
@@ -168,6 +177,9 @@
     </tbody>
 
 </table>
+
+    <!-- end container -->
+</div>
 
 <!-- endblock content -->
 {% endblock %}

@@ -39,10 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'widget_tweaks',
+    'import_export',
 
     'accounts',
     'todoapp',
+
+
 ]
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

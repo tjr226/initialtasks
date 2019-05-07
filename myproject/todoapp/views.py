@@ -32,10 +32,14 @@ def home(request):
             # create a new task POST request
             # getting form text
             incoming_task_text = request.POST['task_text']
+            incoming_task_project = request.POST['project']
             days_to_push = request.POST['days_to_push']
             # new task created
-            new_task = TaskModel.objects.create(task_text=incoming_task_text)
-
+            new_task = TaskModel.objects.create(
+                task_text=incoming_task_text, 
+                project=incoming_task_project)
+            print(new_task.project)
+            print("printed task")
             # if no entry in days_to_push field, redirect home. no more action necessary
             if days_to_push == "":
                 return redirect('home')

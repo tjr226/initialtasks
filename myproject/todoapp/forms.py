@@ -7,7 +7,7 @@ class NewTaskForm(forms.ModelForm):
     class Meta:
         model = TaskModel
         # next line picks out the task_text field from the TaskModel
-        fields = ['task_text']
+        fields = ['task_text', 'project']
 
 class CompleteTaskButton(forms.ModelForm):
     # button to complete tasks
