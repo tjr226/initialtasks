@@ -7,8 +7,8 @@ class TaskModel(models.Model):
     # text of todo
     task_text = models.TextField(max_length=4000)
 
-    # project
-    project = models.TextField(
+    # why
+    why = models.TextField(
         max_length=400,
         default=""
         )
