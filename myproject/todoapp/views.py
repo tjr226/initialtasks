@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 
 # copied from django-boards
-from .models import TaskModel, TaskModel.objects
+from .models import TaskModel
 from .forms import NewTaskForm, CompleteTaskButton, HideTaskButton, ShowAllActiveTasksButton, HideAllTasksButton, ShowNextFiveTasksButton, ShowAccomplishedTasksButton, PushTaskButton
 from datetime import datetime, timedelta
 from django.utils import timezone
