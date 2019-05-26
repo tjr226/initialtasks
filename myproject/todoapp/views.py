@@ -33,22 +33,29 @@ def home(request):
             incoming_task_text = request.POST['task_text']
             incoming_task_why = request.POST['why']
             days_to_push = request.POST['days_to_push']
+            hours_to_push = request.POST['hours_to_push']
             # new task created
             new_task = TaskModel.objects.create(
-                task_text=incoming_task_text, 
+                task_text=incoming_task_text,
                 why=incoming_task_why)
-            print(new_task.why)
-            print("printed task")
-            # if no entry in days_to_push field, redirect home. no more action necessary
-            if days_to_push == "":
-                return redirect('home')
 
-            # cast incoming days_to_push string to int
+            if (days_to_push == "") and (hours_to_push == ""):
+                return redirect('home')
+                
+            if days_to_push == "":
+                days_to_push = 0
+                
+            if hours_to_push == "":
+                hours_to_push = 0
+                
+            hours_to_push = int(hours_to_push)
             days_to_push = int(days_to_push)
-            if type(days_to_push) == type(int()):
-                if days_to_push > 0:
-                    new_task.next_update_date = datetime.now() + timedelta(days=int(days_to_push))
-                    new_task.hidden_boolean = True
+
+            new_task.next_update_date = datetime.now() + timedelta(days=days_to_push) + timedelta(hours=hours_to_push)
+       
+            if days_to_push > 0:
+                new_task.hidden_boolean = True
+                
             new_task.save()
             return redirect('home')
         elif 'show_all_active' in request.POST:
@@ -103,14 +110,17 @@ def home(request):
                 hours_to_push = request.POST['hours_to_push']
                 days_to_push = request.POST['days_to_push']
                 task_to_update = TaskModel.objects.get(id=form_task_id)
-                
+
                 if len(hours_to_push) < 1:
                     hours_to_push = 0
                 if len(days_to_push) < 1:
                     days_to_push = 0
-            
-                task_to_update.next_update_date = datetime.now() + timedelta(hours=int(hours_to_push)) + timedelta(days=int(days_to_push))
-                task_to_update.hidden_boolean = True
+
+                task_to_update.next_update_date = datetime.now() + timedelta(hours=int(hours_to_push)
+                                                                             ) + timedelta(days=int(days_to_push))
+                if int(days_to_push) > 0:
+                    task_to_update.hidden_boolean = True
+
                 task_to_update.save()
             return redirect('home')
 

@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'accounts',
     'todoapp',
 
-
 ]
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True

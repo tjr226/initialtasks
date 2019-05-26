@@ -3,6 +3,8 @@ from .models import TaskModel
 
 class NewTaskForm(forms.ModelForm):
     # form for new tasks
+
+    hours_to_push = forms.IntegerField(required=False)
     days_to_push = forms.IntegerField(required=False)
     class Meta:
         model = TaskModel
