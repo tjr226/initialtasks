@@ -106,14 +106,13 @@
         <thead class="thead-dark">
             <!-- first row of table -->
             <tr>
-                <th>Task</th>
-                <th>Why</th>
+                <th>Stuff</th>
+                <!-- <th>Task</th>
                 <th>When</th>
                 <th>Hide</th>
-                <th>Hours to push</th>
-                <th>Days to push</th>
-                <th>Push task</th>
-                <th>Complete</th>
+                <th>Hide 1 month</th>
+                <th>Hide 1 year</th> -->
+                <!-- <th>Complete</th> -->
             </tr>
         </thead>
         <tbody>
@@ -127,26 +126,24 @@
                     {{ task.task_text }}
                 </td>
 
-
-                <td class="align-middle">
-                    {{ task.why }}
-                </td>
                 <td class="align-middle">
                     {{ task.next_update_date|naturaltime }}
                 </td>
 
                 <!-- form for hide task button -->
-                <form method="post">
-                    {% csrf_token %}
-                    {{ hide_task_form.as_p }}
-                    <td>
-                        <!-- this input element is needed to identify which task -->
-                        <input value="{{task.id}}" name="task_id" type="hidden">
-                        <button type="submit" name="hide" class="btn btn-outline-secondary">Hide</button>
-                    </td>
-                </form>
+                <!-- <td class="align-middle">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ hide_task_form.as_p }} -->
 
-                <form method="post">
+                <!-- this input element is needed to identify which task -->
+                <!-- <input value="{{task.id}}" name="task_id" type="hidden">
+                        <button type="submit" name="hide" class="btn btn-outline-secondary">Hide</button>
+
+                    </form>
+                </td> -->
+
+                <!-- <form method="post">
                     {% csrf_token %}
                     {{ push_task.as_p }}
 
@@ -165,7 +162,39 @@
                     </td>
 
                     </td>
-                </form>
+                </form> -->
+
+                <td class="align-middle">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ push_task_by_week.as_p }}
+                        <input value="{{task.id}}" name="task_id" type="hidden">
+                        <button type="push_task_by_week_button" name="push_task_by_week_button"
+                            class="btn btn-outline-secondary">Hide 1 week</button>
+                    </form>
+                </td>
+
+                <td class="align-middle">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ push_task_by_month.as_p }}
+                        <input value="{{task.id}}" name="task_id" type="hidden">
+                        <button type="push_task_by_month_button" name="push_task_by_month_button"
+                            class="btn btn-outline-secondary">Hide 1 month</button>
+                    </form>
+                </td>
+
+                <td class="align-middle">
+
+                <td class="align-middle">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ push_task_by_year.as_p }}
+                        <input value="{{task.id}}" name="task_id" type="hidden">
+                        <button type="push_task_by_year_button" name="push_task_by_year_button"
+                            class="btn btn-outline-secondary">Hide 1 year</button>
+                    </form>
+                </td>
 
                 <td class="align-middle">
 
@@ -177,7 +206,6 @@
                         <button type="complete_task_button" name="complete_task_button"
                             class="btn btn-outline-secondary">Complete</button>
                     </form>
-
 
                 </td>
             </tr>

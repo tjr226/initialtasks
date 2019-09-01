@@ -8,10 +8,10 @@ class TaskModel(models.Model):
     task_text = models.TextField(max_length=4000)
 
     # why
-    why = models.TextField(
-        max_length=400,
-        default=""
-        )
+    # why = models.TextField(
+    #     max_length=400,
+    #     default=""
+    #     )
 
     # next date it will come up in the system
     next_update_date = models.DateTimeField(auto_now_add=True)

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 
 # copied from django-boards
 from .models import TaskModel
-from .forms import NewTaskForm, CompleteTaskButton, HideTaskButton, ShowAllActiveTasksButton, HideAllTasksButton, ShowNextFiveTasksButton, ShowAccomplishedTasksButton, PushTaskButton
+from .forms import NewTaskForm, CompleteTaskButton, HideTaskButton, ShowAllActiveTasksButton, HideAllTasksButton, ShowNextFiveTasksButton, ShowAccomplishedTasksButton, PushTaskButton, PushTaskByWeekButton, PushTaskByMonthButton, PushTaskByYearButton
 from datetime import datetime, timedelta
 from django.utils import timezone
 
@@ -14,6 +14,9 @@ def home(request):
     new_task_form = NewTaskForm()
     complete_task_button = CompleteTaskButton()
     push_task_button = PushTaskButton()
+    push_task_by_week_button = PushTaskByWeekButton()
+    push_task_by_month_button = PushTaskByMonthButton()
+    push_task_by_year_button = PushTaskByYearButton()
     hidden_task_button = HideTaskButton()
     show_all_active_tasks_button = ShowAllActiveTasksButton()
     hide_all_tasks_button = HideAllTasksButton()
@@ -31,31 +34,31 @@ def home(request):
             # create a new task POST request
             # getting form text
             incoming_task_text = request.POST['task_text']
-            incoming_task_why = request.POST['why']
-            days_to_push = request.POST['days_to_push']
-            hours_to_push = request.POST['hours_to_push']
+            # days_to_push = request.POST['days_to_push']
+            # hours_to_push = request.POST['hours_to_push']
             # new task created
             new_task = TaskModel.objects.create(
                 task_text=incoming_task_text,
-                why=incoming_task_why)
+            )
 
-            if (days_to_push == "") and (hours_to_push == ""):
-                return redirect('home')
-                
-            if days_to_push == "":
-                days_to_push = 0
-                
-            if hours_to_push == "":
-                hours_to_push = 0
-                
-            hours_to_push = int(hours_to_push)
-            days_to_push = int(days_to_push)
+            # if (days_to_push == "") and (hours_to_push == ""):
+            #     return redirect('home')
 
-            new_task.next_update_date = datetime.now() + timedelta(days=days_to_push) + timedelta(hours=hours_to_push)
-       
-            if days_to_push > 0:
-                new_task.hidden_boolean = True
-                
+            # if days_to_push == "":
+            #     days_to_push = 0
+
+            # if hours_to_push == "":
+            #     hours_to_push = 0
+
+            # hours_to_push = int(hours_to_push)
+            # days_to_push = int(days_to_push)
+
+            # + timedelta(days=days_to_push) + timedelta(hours=hours_to_push)
+            new_task.next_update_date = datetime.now()
+
+            # if days_to_push > 0:
+            #     new_task.hidden_boolean = True
+
             new_task.save()
             return redirect('home')
         elif 'show_all_active' in request.POST:
@@ -103,25 +106,61 @@ def home(request):
         #         task_to_update.save()
 
         #     return redirect('home')
-        elif 'push_task' in request.POST:
-            form = PushTaskButton(request.POST)
+        # elif 'push_task' in request.POST:
+        #     form = PushTaskButton(request.POST)
+        #     if form.is_valid():
+        #         form_task_id = request.POST['task_id']
+        #         hours_to_push = request.POST['hours_to_push']
+        #         days_to_push = request.POST['days_to_push']
+        #         task_to_update = TaskModel.objects.get(id=form_task_id)
+
+        #         if len(hours_to_push) < 1:
+        #             hours_to_push = 0
+        #         if len(days_to_push) < 1:
+        #             days_to_push = 0
+
+        #         task_to_update.next_update_date = datetime.now() + timedelta(hours=int(hours_to_push)
+        #                                                                      ) + timedelta(days=int(days_to_push))
+        #         if int(days_to_push) > 0:
+        #             task_to_update.hidden_boolean = True
+
+        #         task_to_update.save()
+        #     return redirect('home')
+
+        elif 'push_task_by_week_button' in request.POST:
+            form = PushTaskByWeekButton(request.POST)
             if form.is_valid():
                 form_task_id = request.POST['task_id']
-                hours_to_push = request.POST['hours_to_push']
-                days_to_push = request.POST['days_to_push']
                 task_to_update = TaskModel.objects.get(id=form_task_id)
-
-                if len(hours_to_push) < 1:
-                    hours_to_push = 0
-                if len(days_to_push) < 1:
-                    days_to_push = 0
-
-                task_to_update.next_update_date = datetime.now() + timedelta(hours=int(hours_to_push)
-                                                                             ) + timedelta(days=int(days_to_push))
-                if int(days_to_push) > 0:
-                    task_to_update.hidden_boolean = True
-
+                task_to_update.next_update_date = datetime.now() + timedelta(days=7)
+                task_to_update.hidden_boolean = True
                 task_to_update.save()
+
+            return redirect('home')
+
+        elif 'push_task_by_month_button' in request.POST:
+            # print('in task by month')
+            form = PushTaskByMonthButton(request.POST)
+            if form.is_valid():
+                form_task_id = request.POST['task_id']
+                task_to_update = TaskModel.objects.get(id=form_task_id)
+                # print(task_to_update)
+
+                task_to_update.next_update_date = datetime.now() + timedelta(days=30)
+                task_to_update.hidden_boolean = True
+                task_to_update.save()
+
+            return redirect('home')
+
+        elif 'push_task_by_year_button' in request.POST:
+            form = PushTaskByYearButton(request.POST)
+            if form.is_valid():
+                form_task_id = request.POST['task_id']
+                task_to_update = TaskModel.objects.get(id=form_task_id)
+                task_to_update.next_update_date = datetime.now() + timedelta(days=365)
+                task_to_update.hidden_boolean = True
+                task_to_update.save()
+
             return redirect('home')
 
         elif 'complete_task_button' in request.POST:
@@ -164,6 +203,9 @@ def home(request):
                     'tasks': tasks_to_render,
                     'new_task_form': new_task_form,
                     'push_task_button': push_task_button,
+                    'push_task_by_week_button': push_task_by_week_button,
+                    'push_task_by_month_button': push_task_by_month_button,
+                    'push_task_by_year_button': push_task_by_year_button,
                     'complete_task_button': complete_task_button,
                     'hidden_task_button': hidden_task_button,
                     'show_all_active_tasks_button': show_all_active_tasks_button,
@@ -191,6 +233,9 @@ def home(request):
                     'tasks': accomplished_tasks,
                     'new_task_form': new_task_form,
                     'push_task_button': push_task_button,
+                    'push_task_by_week_button': push_task_by_week_button,
+                    'push_task_by_month_button': push_task_by_month_button,
+                    'push_task_by_year_button': push_task_by_year_button,
                     'complete_task_button': complete_task_button,
                     'hidden_task_button': hidden_task_button,
                     'show_all_active_tasks_button': show_all_active_tasks_button,
@@ -214,6 +259,9 @@ def home(request):
         'tasks': tasks_to_render,
         'new_task_form': new_task_form,
         'push_task_button': push_task_button,
+        'push_task_by_week_button': push_task_by_week_button,
+        'push_task_by_month_button': push_task_by_month_button,
+        'push_task_by_year_button': push_task_by_year_button,
         'complete_task_button': complete_task_button,
         'hidden_task_button': hidden_task_button,
         'show_all_active_tasks_button': show_all_active_tasks_button,

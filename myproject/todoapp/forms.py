@@ -4,12 +4,10 @@ from .models import TaskModel
 class NewTaskForm(forms.ModelForm):
     # form for new tasks
 
-    hours_to_push = forms.IntegerField(required=False)
-    days_to_push = forms.IntegerField(required=False)
     class Meta:
         model = TaskModel
         # next line picks out the task_text field from the TaskModel
-        fields = ['task_text', 'why']
+        fields = ['task_text']
 
 class CompleteTaskButton(forms.ModelForm):
     # button to complete tasks
@@ -19,6 +17,26 @@ class CompleteTaskButton(forms.ModelForm):
 
 class PushTaskButton(forms.ModelForm):
     # combined button to push tasks by hours and days
+    class Meta:
+        model = TaskModel
+        fields = []
+
+
+class PushTaskByWeekButton(forms.ModelForm):
+    # push a task by one week
+    class Meta:
+        model = TaskModel
+        fields = []
+
+
+class PushTaskByMonthButton(forms.ModelForm):
+    # push a task by one month
+    class Meta:
+        model = TaskModel
+        fields = []
+
+class PushTaskByYearButton(forms.ModelForm):
+    #  push a task by a year
     class Meta:
         model = TaskModel
         fields = []
